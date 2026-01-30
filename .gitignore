@@ -38,3 +38,6 @@ lerna-debug.log*
 .cache
 .temp
 *.log
+.env
+frontend/.env
+.env
