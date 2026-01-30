@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, Share2, Copy, Check, Plus, Users, Calendar, TrendingUp, CheckCircle2, X as XIcon } from 'lucide-react';
 import { getSavingsPlan } from '../services/api';
@@ -16,22 +16,23 @@ const PlanDetail = () => {
   const [showModal, setShowModal] = useState(false);
   const [isNewPlan] = useState(location.state?.isNew || false);
 
-  const fetchPlan = async () => {
-    try {
-      const response = await getSavingsPlan(planCode);
-      if (response.success) {
-        setPlan(response.plan);
-      }
-      setLoading(false);
-    } catch (err) {
-      setError('Plan not found');
-      setLoading(false);
-    }
-  };
 
-  useEffect(() => {
-    fetchPlan();
-  }, [planCode]);
+const fetchPlan = useCallback(async () => {
+  try {
+    const response = await getSavingsPlan(planCode);
+    if (response.success) {
+      setPlan(response.plan);
+    }
+    setLoading(false);
+  } catch (err) {
+    setError('Plan not found');
+    setLoading(false);
+  }
+}, [planCode]); 
+
+useEffect(() => {
+  fetchPlan();
+}, [fetchPlan]); 
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
